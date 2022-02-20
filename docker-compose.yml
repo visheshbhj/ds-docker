@@ -1,0 +1,20 @@
+version: '3'
+services:
+  datascience:
+    image: vb007/data-science:11.5
+    container_name: datascience
+    hostname: datascience
+    user: "${UID}:${GID}"
+    ports:
+      - "8888:8888"
+    volumes:
+      - /path/to/Notebook:/notebook
+    environment:
+      - TORCH_HOME=/notebook/pretrained_models/torch
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu] 
