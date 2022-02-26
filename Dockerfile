@@ -103,7 +103,7 @@ RUN python3 -m pip install --no-cache-dir scikit-learn xgboost tensorflow_decisi
 #COPY bashrc /etc/bash.bashrc
 #RUN chmod a+rwx /etc/bash.bashrc
 
-RUN python3 -m pip install --no-cache-dir pandas scipy matplotlib seaborn opencv-python-headless imageio ffmpeg pillow tqdm jupyterlab ipywebrtc ipython IPython ipywidgets pydot holidays yfinance lightgbm torchsummary 
+RUN python3 -m pip install --no-cache-dir pandas scipy matplotlib seaborn opencv-python-headless imageio ffmpeg pillow tqdm jupyterlab ipywebrtc ipython IPython ipywidgets pydot holidays yfinance lightgbm torchinfo torchmetrics 
 RUN python3 -m pip install --no-cache-dir sympy nose pretrainedmodels efficientnet efficientnet-pytorch 
 # Pin ipykernel and nbformat; see https://github.com/ipython/ipykernel/issues/422
 # Pin jedi; see https://github.com/ipython/ipython/issues/12740
