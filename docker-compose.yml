@@ -1,7 +1,7 @@
 version: '3'
 services:
   datascience:
-    image: vb007/data-science:11.5
+    image: vb007/data-science:11.7
     container_name: datascience
     hostname: datascience
     user: "${UID}:${GID}"
