@@ -19,16 +19,16 @@
 # throughout. Please refer to the TensorFlow dockerfiles documentation
 # for more information.
 
-ARG UBUNTU_VERSION=20.04
+ARG UBUNTU_VERSION=22.04
 
 ARG ARCH=
-ARG CUDA=11.5
+ARG CUDA=11.7
 FROM nvidia/cuda${ARCH:+-$ARCH}:${CUDA}.1-base-ubuntu${UBUNTU_VERSION} as base
 # ARCH and CUDA are specified again because the FROM directive resets ARGs
 # (but their default value is retained if set previously)
 ARG ARCH
 ARG CUDA
-ARG CUDNN=8.3.1.22-1
+ARG CUDNN=8.4.1.22-1
 #ARG CUDNN=8.1.0.77-1
 ARG CUDNN_MAJOR_VERSION=8
 ARG LIB_DIR_PREFIX=x86_64
@@ -41,7 +41,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Needed for string substitution
 SHELL ["/bin/bash", "-c"]
 # Pick up some TF dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN  apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub && \
+     apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         cuda-command-line-tools-${CUDA/./-} \
         libcublas-${CUDA/./-} \
@@ -98,7 +99,7 @@ RUN ln -s $(which python3) /usr/local/bin/python
 ARG TF_PACKAGE=tensorflow
 ARG TF_PACKAGE_VERSION=
 RUN python3 -m pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
-RUN python3 -m pip install --no-cache-dir torch==1.10.1+cu113 torchvision==0.11.2+cu113 torchaudio==0.10.1+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html
+RUN python3 -m pip install --no-cache-dir torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
 RUN python3 -m pip install --no-cache-dir scikit-learn xgboost tensorflow_decision_forests tensorflow-addons wurlitzer statsmodels catboost
 
 #COPY bashrc /etc/bash.bashrc
