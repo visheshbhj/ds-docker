@@ -88,7 +88,7 @@ RUN ln -s $(which python3) /usr/local/bin/python
 #ARG TF_PACKAGE=tensorflow
 #ARG TF_PACKAGE_VERSION=2.10.0
 #RUN python3 -m pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
-RUN python3 -m pip install --no-cache-dir tensorflow
+RUN python3 -m pip install --no-cache-dir tensorflow==2.10.0
 RUN python3 -m pip install --no-cache-dir torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
 RUN python3 -m pip install --no-cache-dir scikit-learn xgboost tensorflow_decision_forests tensorflow-addons wurlitzer statsmodels catboost
 
