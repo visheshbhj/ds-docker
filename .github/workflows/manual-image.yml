@@ -5,7 +5,7 @@ on:
     inputs:
       tfVersion:
         description: 'Tensorflow Version'
-        required: true
+        required: false
 
 jobs:
   build:
@@ -21,7 +21,7 @@ jobs:
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name: Build the Docker image
-      run: docker build -f Dockerfile -t vb007/data-science:11.7 --build-arg TF_PACKAGE_VERSION="$TF_VERSION" --no-cache .
+      run: docker build -f Dockerfile -t vb007/data-science:11.7 --no-cache .
     - name: docker push
       run: |
         docker push vb007/data-science:11.7
