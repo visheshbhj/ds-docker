@@ -6,9 +6,6 @@ on:
       tfVersion:
         description: 'Tensorflow Version'
         required: true
-      cudaVersion:
-        description: 'Cuda Version'
-        required: true
 
 jobs:
   build:
@@ -24,7 +21,7 @@ jobs:
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name: Build the Docker image
-      run: docker build -f Dockerfile -t vb007/data-science:"$CUDA_VERSION" --build-arg TF_PACKAGE_VERSION="$TF_VERSION" --no-cache .
+      run: docker build -f Dockerfile -t vb007/data-science:11.7 --build-arg TF_PACKAGE_VERSION="$TF_VERSION" --no-cache .
     - name: docker push
       run: |
-        docker push vb007/data-science:$CUDA_VERSION
+        docker push vb007/data-science:11.7
