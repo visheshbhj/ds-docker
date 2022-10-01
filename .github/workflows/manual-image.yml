@@ -3,16 +3,16 @@ name: Docker Image CI
 on:
   workflow_dispatch:
     inputs:
+      tfVersion:
+        description: 'Tensorflow Version'
+        required: true
       cudaVersion:
         description: 'Cuda Version'
         required: true
 
 jobs:
-
   build:
-
     runs-on: ubuntu-22.04
-
     steps:
     - uses: actions/checkout@v3
     - name: docker login
@@ -20,10 +20,11 @@ jobs:
         DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}   
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
         CUDA_VERSION: ${{ inputs.cudaVersion }}
+        TF_VERSION: ${{ inputs.tfVersion }}
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name: Build the Docker image
-      run: docker build . -f Dockerfile -t vb007/data-science:$ENVIRONMENT
+      run: docker build . -f Dockerfile -t vb007/data-science:$ENVIRONMENT --build-arg TF_PACKAGE_VERSION=$TF_VERSION
     - name: docker push
       run: |
         docker push vb007/data-science:$ENVIRONMENT
