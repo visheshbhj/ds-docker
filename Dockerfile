@@ -19,7 +19,7 @@
 # throughout. Please refer to the TensorFlow dockerfiles documentation
 # for more information.
 
-ARG UBUNTU_VERSION=22.04
+ARG UBUNTU_VERSION=20.04
 
 ARG ARCH=
 ARG CUDA=11.7
@@ -61,6 +61,17 @@ RUN  apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda
         zlib1g \
         unzip
 
+# Install TensorRT if not building for PowerPC
+# NOTE: libnvinfer uses cuda11.1 versions
+RUN [[ "${ARCH}" = "ppc64le" ]] || { apt-get update && \
+        apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu2004/x86_64/7fa2af80.pub && \
+        echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu2004/x86_64 /"  > /etc/apt/sources.list.d/tensorRT.list && \
+        apt-get update && \
+        apt-get install -y --no-install-recommends libnvinfer${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda11.0 \
+        libnvinfer-plugin${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda11.0 \
+        && apt-get clean \
+        && rm -rf /var/lib/apt/lists/*; }
+
 # For CUDA profiling, TensorFlow requires CUPTI.
 ENV LD_LIBRARY_PATH /usr/local/cuda-11.0/targets/x86_64-linux/lib:/usr/local/cuda/extras/CUPTI/lib64:/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 
@@ -85,10 +96,10 @@ RUN python3 -m pip --no-cache-dir install --upgrade \
 # Some TF tools expect a "python" binary
 RUN ln -s $(which python3) /usr/local/bin/python
 
-#ARG TF_PACKAGE=tensorflow
-#ARG TF_PACKAGE_VERSION=2.10.0
-#RUN python3 -m pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
-RUN python3 -m pip install --no-cache-dir tensorflow==2.10.0
+ARG TF_PACKAGE=tensorflow
+ARG TF_PACKAGE_VERSION=
+RUN python3 -m pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
+#RUN python3 -m pip install --no-cache-dir tensorflow==2.10.0
 RUN python3 -m pip install --no-cache-dir torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
 RUN python3 -m pip install --no-cache-dir scikit-learn xgboost tensorflow_decision_forests tensorflow-addons wurlitzer statsmodels catboost
 
